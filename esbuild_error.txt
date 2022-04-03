@@ -1,2 +1,0 @@
-https://blog.csdn.net/qq_41499782/article/details/116118683
-node ./node_modules/esbuild/install.js

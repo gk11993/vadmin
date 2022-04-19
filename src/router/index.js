@@ -23,7 +23,7 @@ const routes = [
                 meta: {
                     title: '用户管理'
                 },
-                component: () => import ( /* webpackChunkName: "admin" */ "../views/admin.vue")
+                component: () => import ( /* webpackChunkName: "admin" */ "../views/Admin.vue")
             }, {
                 path: "/menu",
                 name: "Menu",
@@ -52,6 +52,27 @@ const routes = [
                     title: '个人中心'
                 },
                 component: () => import (/* webpackChunkName: "user" */ '../views/User.vue')
+            }, {
+                path: '/role',
+                name: 'role',
+                meta: {
+                    title: '管理员分组'
+                },
+                component: () => import (/* webpackChunkName: "user" */ '../views/Role.vue')
+            }, {
+                path: '/editpic',
+                name: 'editpic',
+                meta: {
+                    title: '图片'
+                },
+                component: () => import (/* webpackChunkName: "user" */ '../views/Editpic.vue')
+            }, {
+                path: '/editvideo',
+                name: 'editvideo',
+                meta: {
+                    title: '视频'
+                },
+                component: () => import (/* webpackChunkName: "user" */ '../views/Editvideo.vue')
             }
         ]
     }, {

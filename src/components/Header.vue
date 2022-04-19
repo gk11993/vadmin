@@ -19,7 +19,7 @@
                 </div> -->
                 <!-- 用户头像 -->
                 <div class="user-avator">
-                    <img src="../assets/img/img.png" />
+                    <img :src="ms_img" />
                 </div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -32,7 +32,7 @@
                             <!-- <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
                                 <el-dropdown-item>项目仓库</el-dropdown-item>
                             </a> -->
-                            <!-- <el-dropdown-item command="user">个人中心</el-dropdown-item> -->
+                            <el-dropdown-item command="user">个人中心</el-dropdown-item>
                             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
@@ -45,7 +45,7 @@
 import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { dropout} from "../api/index";
+import { dropout, HOST } from "../api/index";
 export default {
     setup() {
         const username = localStorage.getItem("ms_name");
@@ -93,7 +93,11 @@ export default {
             }
         };
 
+
+        const ms_img = HOST+localStorage.getItem("ms_img")
+
         return {
+            ms_img,
             username,
             message,
             collapse,

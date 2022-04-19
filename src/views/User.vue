@@ -16,7 +16,7 @@
                             </span>
                         </div>
                         <div class="info-name">{{ name }}</div>
-                        <div class="info-desc">不可能！我的代码怎么可能会有bug！</div>
+                        <div class="info-desc">{{form.desc}}</div>
                     </div>
                 </el-card>
             </el-col>
@@ -29,10 +29,10 @@
                     </template>
                     <el-form label-width="90px">
                         <el-form-item label="用户名："> {{ name }} </el-form-item>
-                        <el-form-item label="旧密码：">
+                        <el-form-item label="新密码：">
                             <el-input type="password" v-model="form.old"></el-input>
                         </el-form-item>
-                        <el-form-item label="新密码：">
+                        <el-form-item label="确认密码：">
                             <el-input type="password" v-model="form.new"></el-input>
                         </el-form-item>
                         <el-form-item label="个人简介：">
@@ -65,7 +65,10 @@
 import { reactive, ref } from "vue";
 import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
-import avatar from "../assets/img/img.jpg";
+import avatar from "../assets/img/empty.jpg";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { HOST,request,update } from "../api/index";
+
 export default {
     name: "user",
     components: {
@@ -74,15 +77,28 @@ export default {
     setup() {
         const name = localStorage.getItem("ms_username");
         const form = reactive({
+            id: localStorage.getItem("ms_userid"),
             old: "",
             new: "",
-            desc: "不可能！我的代码怎么可能会有bug！",
+            desc: localStorage.getItem("ms_desc"),
         });
-        const onSubmit = () => {};
+        const onSubmit = () => {
+            if ( form.old != form.new ) {
+                ElMessage.warning("两次密码不相同");
+                return ;
+            }
+            form.password = form.new
+            update('admin', form).then(res => {
+                //localStorage.setItem("ms_img", response.Data.img);
+                localStorage.setItem("ms_desc", response.Data.description);
+                ElMessage.success("修改成功")
+            })
+        }
 
-        const avatarImg = ref(avatar);
-        const imgSrc = ref("");
-        const cropImg = ref("");
+        //const avatarImg = ref(avatar);
+        const avatarImg = ref(HOST+"/"+localStorage.getItem("ms_img"));
+        const imgSrc = ref('');
+        const cropImg = ref('');
         const dialogVisible = ref(false);
         const cropper = ref(null);
 
@@ -112,6 +128,29 @@ export default {
         const saveAvatar = () => {
             avatarImg.value = cropImg.value;
             dialogVisible.value = false;
+            //将base64转换为文件
+            let dataURLtoFile = (dataurl, filename) => { 
+                let arr = dataurl.split(',')
+                let mime = arr[0].match(/:(.*?);/)[1]
+                let bstr = atob(arr[1])
+                let n = bstr.length
+                let u8arr = new Uint8Array(n)
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new File([u8arr], filename, { type: mime });
+            }
+            //调用
+            var file = dataURLtoFile(cropImg.value, "thumb.png");
+            var formData = new FormData();
+            formData.append('thumb', file)
+            request({url: 'upload/up_img', data: formData, method:'post', headerJson: false}).then(res => {
+                form.img = res.info
+                update('admin', form).then(response => {
+                    localStorage.setItem("ms_img", res.info);
+                    location.reload()
+                })
+            })
         };
 
         return {

@@ -89,40 +89,39 @@ export default {
   },
     methods:{
        submitForm(){
-          this.$router.push("/");
-      loginsss(this.param)
-        .then(response => {
-          
-          if(response.Code===200){
-            localStorage.setItem("ms_username", this.param.username);
-            localStorage.setItem("ms_name", response.Data.name);
-            localStorage.setItem("ms_userid", response.Data.id);
-            localStorage.setItem("ms_menus", JSON.stringify(response.Menus));
-            localStorage.setItem("ms_token", response.Token);
-            localStorage.setItem("ms_img", response.Data.img);
-            this.$router.push('/')
-          }else{
-            this.$notify.error({
-              title: '失败',
-              message: response.Msg
+            this.$router.push("/");
+            loginsss(this.param)
+            .then(response => {
+                if(response.Code===200){
+                    localStorage.setItem("ms_username", this.param.username);
+                    localStorage.setItem("ms_name", response.Data.name);
+                    localStorage.setItem("ms_userid", response.Data.id);
+                    localStorage.setItem("ms_menus", JSON.stringify(response.Menus));
+                    localStorage.setItem("ms_token", response.Token);
+                    localStorage.setItem("ms_img", response.Data.img);
+                    localStorage.setItem("ms_desc", response.Data.description);
+                    this.$router.push('/')
+                }else{
+                    this.$notify.error({
+                      title: '失败',
+                      message: response.Msg
+                    })
+                }
             })
-          }
-          
-        })
-        .catch(response => {
-            // localStorage.setItem("ms_username", this.param.user_name);
-            //   this.$router.push('/')
-        //    if(response.code==200){
-        //      localStorage.setItem("ms_username", param.user_name);
-        //       this.$router.push('/')
-        //   }else{
-        //     this.$notify.error({
-        //       title: '失败',
-        //       message: response.msg
-        //     })
-        //   }
-        })
-    },
+            .catch(response => {
+                // localStorage.setItem("ms_username", this.param.user_name);
+                //   this.$router.push('/')
+            //    if(response.code==200){
+            //      localStorage.setItem("ms_username", param.user_name);
+            //       this.$router.push('/')
+            //   }else{
+            //     this.$notify.error({
+            //       title: '失败',
+            //       message: response.msg
+            //     })
+            //   }
+            })
+        },
     }
 };
 </script>
